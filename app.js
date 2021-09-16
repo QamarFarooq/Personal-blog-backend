@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 
 const routesHandler = require('./routes/routes');
 
@@ -18,9 +19,11 @@ app.use((req, res, next) => {
 //GET /feed/posts
 app.use('/', routesHandler);
 
-
-
-app.listen(3000);
+mongoose.connect('mongodb+srv://Qman66:fWySGWplnDUbAmlF@cluster0.gbxmk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority')
+.then(result => {
+    app.listen(3000);
+})
+.catch(err => console.log(err))
 
 
 

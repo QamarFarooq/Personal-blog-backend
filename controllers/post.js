@@ -1,8 +1,11 @@
+const mongoose = require('mongoose');
+const Post = require('../models/post');
+
 exports.createPost = (req, res, next) => {
-    res.status(200).json({
-        postsaass: [{sexypig: 'I am inside createPostaaa'}],
-        ANOTHERONE: [{sexypig: 'I am inside BITCHES'}]
-    });
+
+    const title = req.body.title
+    const body = req.body.content
+
 };
 
 exports.editPost = (req, res, next) => {
