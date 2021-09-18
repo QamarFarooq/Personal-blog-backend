@@ -5,8 +5,19 @@ const routesHandler = require('./routes/routes');
 
 const app = express();
 
-// support parsing of application/json type post data
+// supports parsing of application/json type post data
 app.use(express.json());
+
+// catches all errors thrown on server
+app.use((error, req, res, next) => {
+    console.log(error);
+    // default value of error code is 500
+    const status = error.statusCode || 500;
+    const message = error.message;
+    res.status(status).json({
+        message: message
+    })
+})
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -16,7 +27,7 @@ app.use((req, res, next) => {
     next();
 })
 
-//GET /feed/posts
+// handle routes
 app.use('/', routesHandler);
 
 mongoose.connect('mongodb+srv://Qman66:fWySGWplnDUbAmlF@cluster0.gbxmk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority')
