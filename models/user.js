@@ -13,7 +13,15 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: true
-    }
+    },
+    status: {
+        type: String,
+        required: true
+    },
+    posts: [{
+        type: Schema.Types.Objectid,
+        ref: 'Post'
+    }]
 });
 
 module.export = mongoose.model('Post', userSchema)
