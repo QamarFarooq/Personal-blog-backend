@@ -2,8 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const routesHandler = require('./routes/routes');
+const authRoutes = require('./routes/auth');
 
 const app = express();
+
+//global.title = 'title';
 
 // supports parsing of application/json type post data
 app.use(express.json());
@@ -14,8 +17,10 @@ app.use((error, req, res, next) => {
     // default value of error code is 500
     const status = error.statusCode || 500;
     const message = error.message;
+    const data = error.data;
     res.status(status).json({
-        message: message
+        message: message,
+        data: data
     })
 })
 
@@ -29,6 +34,7 @@ app.use((req, res, next) => {
 
 // handle routes
 app.use('/', routesHandler);
+app.use('/auth', authRoutes);
 
 mongoose.connect('mongodb+srv://Qman66:fWySGWplnDUbAmlF@cluster0.gbxmk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority')
 .then(result => {

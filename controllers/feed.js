@@ -4,6 +4,8 @@ exports.getPost = (req, res, next) => {
     const currentPage = req.query.page || 1;
     const perPage = 2; //this value needs to be the same on the front-end
     let totalItems; 
+
+    //global.title = "cool"
     
     Post.find()
         .countDocuments()
@@ -14,6 +16,7 @@ exports.getPost = (req, res, next) => {
                 .limit(perPage);
         })
         .then( posts => {
+            console.log(title);
             res.status(200).json({ message: 'Fetched paginated posts successfully', posts: posts, totalItems: totalItems })
         })
         .catch(err => {

@@ -9,9 +9,6 @@ const postController = require('../controllers/post');
 
 const resetPasswordController = require('../controllers/reset-password');
 
-const userController = require('../controllers/user');
-
-
 // get list of post
 // example of url localhost:3000/?page=2
 router.get('/', feedController.getPost);
@@ -31,18 +28,6 @@ router.put('/edit-post/:postId', [
 
 // deleting a post 
 router.delete('/delete-post/:postId', postController.deletePost);
-
-// signing user in 
-router.post('/signin', userController.signInUser);
-
-// forgot password 
-router.post('/forgot-password', resetPasswordController.resetPassword);
-
-// change password 
-router.post('/profile-page/change-password', userController.changePassword);
-
-// change email 
-router.post('/profile-page/change-email', userController.changeEmail);
 
 
 
