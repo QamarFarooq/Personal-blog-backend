@@ -4,8 +4,7 @@ const bcrypt = require('bcryptjs');
 
 const User = require('../models/user');
 const Post = require('../models/post');
-
-
+//const user = require('../models/user');
 
 exports.signUpUser = (req, res, next) => {
     const errors = validationResult(req);
@@ -68,7 +67,6 @@ exports.signUpUser = (req, res, next) => {
 }
 
 exports.signInUser = (req, res, next) => {
-
     const email = req.body.email;
     const password = req.body.password;
     let loadedUser;
@@ -95,7 +93,7 @@ exports.signInUser = (req, res, next) => {
         const token = jsonWebToken.sign({
             email: loadedUser.email,
             userID: loadedUser._id.toString()
-        }, 'secretstringkey', { expiresIn: '1h' });
+        }, 'secretstringkey', { expiresIn: '6h' });
         res.status(200).json({message: 'Successfully authenticated', token: token, userId: loadedUser._id.toString()});
     })
     .catch(err => {
@@ -106,20 +104,89 @@ exports.signInUser = (req, res, next) => {
         // our middlewear in app.js file
         next(err);
     })
-
-
-};
-
-exports.changePassword = (req, res, next) => {
-    res.status(200).json({
-        posts: [{title: 'I am inside changePassword'}]
-    });
 };
 
 exports.changeEmail = (req, res, next) => {
-    res.status(200).json({
-        posts: [{title: 'I am inside changeEmail'}]
-    });
+    const newEmail = req.body.email;
+
+    User.findOne().then(user => {
+        //if the user does not exist
+        if (!user) {
+            const error = new Error('Could not find User')
+            error.statusCode = 404;
+            // if you throw an error inside a then block
+            // than catch block will be reached and it will
+            // be passed as an error to the catch block
+            throw error;
+        }
+        //set user email with new email extracted
+        user.email = newEmail;
+        user.save().then(res.status(200).json({message: 'User email was changed successfully to ' + newEmail, user: user}));
+    }).catch(err => {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        // you need to do next() otherwise error will not reach
+        // our middlewear in app.js file
+        next(err);
+    })
+};
+
+exports.changeName = (req, res, next) => {
+    const newName = req.body.name;
+
+    User.findOne().then(user => {
+        //if the user does not exist
+        if (!user) {
+            const error = new Error('Could not find User')
+            error.statusCode = 404;
+            // if you throw an error inside a then block
+            // than catch block will be reached and it will
+            // be passed as an error to the catch block
+            throw error;
+        }
+        //set user email with new email extracted
+        user.name = newName;
+        user.save().then(res.status(200).json({message: 'User name was changed successfully to ' + newName, user: user}));
+    }).catch(err => {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        // you need to do next() otherwise error will not reach
+        // our middlewear in app.js file
+        next(err);
+    })
+}
+
+exports.changePassword = (req, res, next) => {
+    const newPassword = req.body.password;
+
+    User.findOne().then(user => {
+        // if user does not exist
+        if (!user) {
+            const error = new Error('Could not find User')
+            error.statusCode = 404;
+            // if you throw an error inside a then block
+            // than catch block will be reached and it will
+            // be passed as an error to the catch block
+            throw error;
+        }
+        else {
+            bcrypt
+                .hash(newPassword, 12)
+                .then(hashedPassword => {
+                    user.password = hashedPassword
+                    user.save().then(res.status(200).json({message: 'User password was changed successfully to ' + newPassword, user: user}))
+                })
+        }
+    }).catch(err => {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        // you need to do next() otherwise error will not reach
+        // our middlewear in app.js file
+        next(err);
+    })
 };
 
 exports.resetPassword = (req, res, next) => {

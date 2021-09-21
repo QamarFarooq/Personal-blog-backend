@@ -1,6 +1,7 @@
 const express = require('express');
 const { body } = require('express-validator');
 const router = express.Router();
+const isAuth = require('../middleware/is-auth');
 
 
 const feedController = require('../controllers/feed');
@@ -17,17 +18,17 @@ router.get('/', feedController.getPost);
 router.post('/create-post', [
     body('title').trim().isLength({min: 5}),
     body('content').trim().isLength({min: 5})
-], postController.createPost);
+], isAuth, postController.createPost);
 
 // editing a post 
 // exampe of url localhost:3000/edit-post/614362f38f1dde4020a063bb
 router.put('/edit-post/:postId', [
     body('title').trim().isLength({min: 5}),
     body('content').trim().isLength({min: 5})
-], postController.editPost);
+], isAuth, postController.editPost);
 
 // deleting a post 
-router.delete('/delete-post/:postId', postController.deletePost);
+router.delete('/delete-post/:postId', isAuth, postController.deletePost);
 
 
 

@@ -1,6 +1,7 @@
 const express = require('express');
 const User = require('../models/user');
 const { body } = require('express-validator');
+const isAuth = require('../middleware/is-auth');
 
 const router = express.Router();
 
@@ -19,13 +20,16 @@ router.put('/user-signup', [
 // signing user in 
 router.post('/signin', userController.signInUser);
 
-// forgot password 
-router.put('/forgot-password', userController.resetPassword);
-
 // change password 
-router.put('/change-password', userController.changePassword);
+router.put('/change-password', isAuth, userController.changePassword);
 
 // change email 
-router.put('/change-email', userController.changeEmail);
+router.put('/change-email', isAuth, userController.changeEmail);
+
+// change username
+router.put('/change-name', isAuth, userController.changeName);
+
+// forgot password 
+router.put('/forgot-password', userController.resetPassword);
 
 module.exports = router;
