@@ -29,6 +29,9 @@ router.put('/change-email', isAuth, userController.changeEmail);
 // change username
 router.put('/change-name', isAuth, userController.changeName);
 
+// delete user
+router.delete('/delete-user', userController.deleteUser);
+
 // forgot password 
 router.put('/forgot-password', userController.resetPassword);
 

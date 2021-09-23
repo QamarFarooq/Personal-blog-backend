@@ -92,7 +92,7 @@ exports.signInUser = (req, res, next) => {
         }
         const token = jsonWebToken.sign({
             email: loadedUser.email,
-            userID: loadedUser._id.toString()
+            userId: loadedUser._id.toString()
         }, 'secretstringkey', { expiresIn: '6h' });
         res.status(200).json({message: 'Successfully authenticated', token: token, userId: loadedUser._id.toString()});
     })
@@ -188,6 +188,10 @@ exports.changePassword = (req, res, next) => {
         next(err);
     })
 };
+
+exports.deleteUser = (req, res, next) => {
+    res.status(200).json({message: "user was deleted along with all the posts connected to him"})
+}
 
 exports.resetPassword = (req, res, next) => {
     res.status(200).json({

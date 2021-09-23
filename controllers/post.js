@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator');
 
 const Post = require('../models/post');
+const User = require('../models/user');
 
 exports.createPost = (req, res, next) => {
     const errors = validationResult(req);
@@ -16,16 +17,28 @@ exports.createPost = (req, res, next) => {
     const post = new Post({
         title: title,
         content: content,
-        creator: { name: 'Qamar'},
+        creator: req.userId,
     });
-    //create post in db
-    post.save().then(result => {
-        console.log(result);
+    //create post in db and connect it with user
+    post
+    .save()
+    .then(result => {
+        return User.findById(req.userId);
+    })
+    .then(user => {
+        //link posts and user
+        creator = user;
+        user.posts.push(post);
+        return user.save();
+    })
+    .then(result => {
         res.status(201).json({
             message: 'Post was created successfully!',
-            post: result
+            creator: {_id: creator._id, name: creator.name},
+            post: post
         })
-    }).catch(err => {
+    })
+    .catch(err => {
         if (!err.statusCode) {
             err.statusCode = 500;
         }
