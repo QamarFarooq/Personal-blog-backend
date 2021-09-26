@@ -6,8 +6,6 @@ const authRoutes = require('./routes/auth');
 
 const app = express();
 
-//global.title = 'title';
-
 // supports parsing of application/json type post data
 app.use(express.json());
 

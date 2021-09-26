@@ -93,7 +93,7 @@ exports.signInUser = (req, res, next) => {
         const token = jsonWebToken.sign({
             email: loadedUser.email,
             userId: loadedUser._id.toString()
-        }, 'secretstringkey', { expiresIn: '6h' });
+        }, 'secretstringkey', { expiresIn: '5h' });
         res.status(200).json({message: 'Successfully authenticated', token: token, userId: loadedUser._id.toString()});
     })
     .catch(err => {
@@ -190,11 +190,33 @@ exports.changePassword = (req, res, next) => {
 };
 
 exports.deleteUser = (req, res, next) => {
-    res.status(200).json({message: "user was deleted along with all the posts connected to him"})
+
+    //extracted userid from token
+    userId = req.userId;
+
+    User.findByIdAndRemove(userId).catch(err => {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        // you need to do next() otherwise error will not reach
+        // our middlewear in app.js file
+        next(err);          
+    });
+
+    Post.deleteMany({creator: userId}).catch(err => {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        // you need to do next() otherwise error will not reach
+        // our middlewear in app.js file
+        next(err); 
+    })
+
+    res.status(410).json({message: "User and all posts deleted succesfully!"});
 }
 
 exports.resetPassword = (req, res, next) => {
     res.status(200).json({
-        posts: [{title: 'I am inside reset Password'}]
+        posts: [{title: 'I am inside reset Password!'}]
     });
 }

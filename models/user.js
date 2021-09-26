@@ -16,7 +16,7 @@ const userSchema = new Schema({
     },
     status: {
         type: String,
-        dafult: 'I am new!'
+        dafult: 'I am new here!'
     },
     posts: [
         {
@@ -26,4 +26,10 @@ const userSchema = new Schema({
     ]
 });
 
-module.exports = mongoose.model('User', userSchema)
+userSchema.pre('findByIdAndRemove', function(next) {
+    console.log("hey i am inside userschema pre middlewear")
+    next();
+})
+
+module.exports = mongoose.model('User', userSchema);
+

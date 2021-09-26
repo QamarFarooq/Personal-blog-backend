@@ -30,7 +30,9 @@ router.put('/change-email', isAuth, userController.changeEmail);
 router.put('/change-name', isAuth, userController.changeName);
 
 // delete user
-router.delete('/delete-user', userController.deleteUser);
+router.delete('/delete-user', isAuth, userController.deleteUser);
+
+//router.delete('/delete-user', isAuth, userController.deleteUser);
 
 // forgot password 
 router.put('/forgot-password', userController.resetPassword);

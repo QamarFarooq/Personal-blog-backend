@@ -11,9 +11,12 @@ exports.createPost = (req, res, next) => {
         throw error;
     }
 
+    const userId = req.userId;
+
     //extract post from req
     const title = req.body.title
     const content = req.body.content
+    let creator;
     const post = new Post({
         title: title,
         content: content,
