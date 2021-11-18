@@ -34,9 +34,9 @@ app.use((req, res, next) => {
 app.use('/', routesHandler);
 app.use('/auth', authRoutes);
 
-mongoose.connect('mongodb+srv://Qman66:fWySGWplnDUbAmlF@cluster0.gbxmk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority')
+mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.gbxmk.mongodb.net/${process.env.MONGO_DATABASE}?retryWrites=true&w=majority`)
 .then(result => {
-    app.listen(3000);
+    app.listen(process.env.PORT || 8080);
 })
 .catch(err => console.log(err))
 
